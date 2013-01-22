@@ -67,7 +67,7 @@ if (truncVoltages == 0)       %% For a regular un-constrained trap
         VELDC = zeros(1,NUM_DC+NUM_Center);
         VELDC(el) = 1;
 
-        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,0,RF_offset);
+        Vdc = CalcVDC(data,VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,0,RF_offset);
         %plotpot(Vdc,Irf,Jrf,Krf,data.grid,2,sprintf('El. %i DC Potential',el),'V (Volt)');
 %         position
 %         el

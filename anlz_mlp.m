@@ -18,7 +18,7 @@
 %
 % NOTICE: to convert bemsolver txt's into matlab data structure, run
 % importd.m first!
-addpath('/home/soenke/Documents/Mathlab/trap_simulations');
+
 
 clear all
 
@@ -81,8 +81,8 @@ RF_offset = 0;
 position = pos/1000;
 data.pre = 0;
 
-data = getdata_Dtrap(datapath,position,dataNames,1,zMin,zMax,zStep,NUM_DC,NUM_Center);
-data = regenthedata_Dtrap(data,0,0,position,9,NUM_DC,NUM_Center,truncVoltages,RF_offset);
+data = getdata(datapath,position,dataNames,1,zMin,zMax,zStep,NUM_DC,NUM_Center);
+data = regenthedata(data,0,0,position,9,NUM_DC,NUM_Center,truncVoltages,RF_offset);
 data.allmultipoles = allmultipoles;
 data = trapknobs(data,position,0,0,1);
 
@@ -120,7 +120,7 @@ params.VELDC = el;
 
 outpath2 = sprintf('%s/',outpath);
 newfilename2 = 0;
-params = ppt2_Dtrap(params,data,'N',NUM_DC,NUM_Center,2,0,0,2,outpath2,newfilename2,pos,truncVoltages,RF_offset);
+params = ppt2(params,data,'N',NUM_DC,NUM_Center,2,0,0,2,outpath2,newfilename2,pos,truncVoltages,RF_offset);
 
 mes = sprintf('The secular frequencies are: (%G, %G, %G) Hz.\n',params.f(1),params.f(2),params.f(3));
 disp(mes);
