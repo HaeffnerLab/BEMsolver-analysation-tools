@@ -18,23 +18,15 @@
 %
 % NOTICE: to convert bemsolver txt's into matlab data structure, run
 % importd.m first!
-
-
 clear all
 
-%SIunits;
+SIunits;
+
+mainfolder='/home/soenke/Documents/Mathlab/trap_simulations';
 
 %% Inputs
 %Files & Paths
 
-% % A trap without fingers 
-% importDate = 'A_trap_el4toel7-pt_03-20-2012-15h20'; % Imported .MAT file path
-% dataNames = 'A_trap_el4toel7-pt';                   % Imported .MAT file name
-% zMin = 1055; % FREQ   2110 for A trap
-% zMax = 1795; % FREQ   3570 for A trap
-% zStep = 20; % Length covered by each .MAT files
-
-%A trap with fingers 
 importDate = 'D_wire-50_100-120height_field_01-11-2013-16h48'; % Imported .MAT file path
 dataNames = importDate(1:length(importDate)-17); 
 zMin = -5; % FREQ
@@ -42,11 +34,10 @@ zMax = 5; % FREQ
 zStep = 10; % Length covered by each .MAT files
 
 
+datapath = strcat(mainfolder,sprintf('/results/%s/',importDate));
 
-
-datapath = sprintf('/home/soenke/Documents/Mathlab/trap_simulations/results/%s/',importDate);
-outpath = '/home/soenke/Documents/Mathlab/trap_simulations/post-processed-simulation-data/';  %Location to save the output of this program
-newfilename = '05-17-2011-13h08';   %Folder to save the output of thie program
+outpath = strcat(mainfolder,'/post-processed-simulation-data/');  %Location to save the output of this program
+%newfilename = '05-17-2011-13h08';   %Folder to save the output of thie program
 % Trap discription 
 NUM_DC = 24;            % Number of DC electrodes
 NUM_Center = 0;         % Number of Center electrodes
@@ -57,8 +48,17 @@ allmultipoles = 1;
 
 % To add any kind of constraints on the way the electrodes are connected 0
 % for no constrain, for others look in regenthedata
-truncVoltages = 0;
+% 1 If the electrodes are connected in pairs.
+% 2 For Squip first trail
+% 3
+% 4 For the D trap MIT trapping  
+% 5
+%trunc=6: For SQIP Palladium trap 17 electrodes| paired electrodes:1,2|9,10,11|12,13|20,21,22 | 2/15/2012
+%trunc=7: For SQIP 200mu Gold trap 17 electrodes/ Center electrode grounded| paired electrodes:1,2|9,10,11|12,13|20,21,22 | 4/12/2012
+% 35
 
+
+truncVoltages = 0;
 
 pos = 0;      % 5th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
 % pos = 1065;      % 4th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
@@ -129,7 +129,7 @@ disp(mes);
 mes = sprintf('The ion sits at (%G,%G,%G) micron.\n',1e3*params.ionpos(1),1e3*params.ionpos(2),1e3*params.ionpos(3));
 disp(mes);
 
-save('/home/soenke/Documents/Mathlab/trap_simulations/traim.mat');
+save(strcat(mainfolder,'/traim.mat'));
 
 % CC = reshape(data.C,1,184);
 % CC = CC';
@@ -138,7 +138,7 @@ save('/home/soenke/Documents/Mathlab/trap_simulations/traim.mat');
 %     CC(185,a) = a;
 % end
 CC=data.C
-dlmwrite('/home/soenke/Documents/Mathlab/trap_simulations/D_trap/Cfiles/D_trap_mid.txt', CC, 'delimiter', ' ')
+dlmwrite(strcat(mainfolder,'/D_trap/Cfiles/D_trap_mid.txt'), CC, 'delimiter', ' ')
 
 
 
