@@ -27,7 +27,7 @@ mainfolder='/home/soenke/Documents/Mathlab/trap_simulations';
 %% Inputs
 %Files & Paths
 
-importDate = 'D_wire-50_100-120height_field_01-11-2013-16h48'; % Imported .MAT file path
+importDate = 'D_wire-50_99-129_WR65height_field_01-22-2013-14h41'; % Imported .MAT file path
 dataNames = importDate(1:length(importDate)-17); 
 zMin = -5; % FREQ
 zMax = 5; % FREQ
@@ -43,7 +43,7 @@ NUM_DC = 24;            % Number of DC electrodes
 NUM_Center = 0;         % Number of Center electrodes
 NUM_Finger_regions = 0; % This should be 0 or equal to NUM_Center
 
-% To chose between all mltipoles(1) and only U2(0) 
+% To chose between all mltipoles (1) and only U2 (0) 
 allmultipoles = 1;
 
 % To add any kind of constraints on the way the electrodes are connected 0

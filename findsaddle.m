@@ -6,7 +6,7 @@ function [Is Js Ks]=findsaddle(A,X,Y,Z,dim,Z0)
 % For dim ==2 the values of A are linearly extrapolated from [Z0] and [Z0]+1 
 % to those corresponding to Z0 and Ks is such that Z(Ks)<Z0, Z(Ks+1)>=Z0.
 
-debug = true; 
+debug = false; 
 
 if (dim==3)
 	if (numel(size(A)) ~= 3), 
