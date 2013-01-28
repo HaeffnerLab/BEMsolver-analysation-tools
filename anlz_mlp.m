@@ -27,17 +27,17 @@ mainfolder='/home/soenke/Documents/Mathlab/trap_simulations';
 %% Inputs
 %Files & Paths
 
-importDate = 'D_wire-50_99-129_WR65height_field_01-22-2013-14h41'; % Imported .MAT file path
+importDate = 'D_wire-50_99-129_WR64height_field_01-25-2013-13h42'; % Imported .MAT file path
 dataNames = importDate(1:length(importDate)-17); 
-zMin = -5; % FREQ
-zMax = 5; % FREQ
-zStep = 10; % Length covered by each .MAT files
+zMin = 2525; % FREQ
+zMax = 2555; % FREQ
+zStep = 30; % Length covered by each .MAT files
 
 
 datapath = strcat(mainfolder,sprintf('/results/%s/',importDate));
 
 outpath = strcat(mainfolder,'/post-processed-simulation-data/');  %Location to save the output of this program
-%newfilename = '05-17-2011-13h08';   %Folder to save the output of thie program
+%newfilename = '05-17-2011-13h08';   %Folder to save the output of the program
 % Trap discription 
 NUM_DC = 24;            % Number of DC electrodes
 NUM_Center = 0;         % Number of Center electrodes
@@ -60,7 +60,7 @@ allmultipoles = 1;
 
 truncVoltages = 0;
 
-pos = 0;      % 5th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
+pos = 2540;      % 5th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
 % pos = 1065;      % 4th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
 % pos = 760;      % 3rd           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
 % pos = 2085;      % 8th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
@@ -96,15 +96,14 @@ az = 4.5e-3;
 ax = -0.002;
 phi = 0;
 
-
 Ex = 0;
 Ey = 0;
 Ez = 0;
 
-params.rfamplitude = 240; 
-params.frequency = 60e6;
+params.rfamplitude = 200; 
+params.frequency = 52e6;
 U1 = -.22;
-U2 = 6.0; 
+U2 = 5.0; 
 U3 = .22;  
 U4 = 0; 
 U5 = 0;
@@ -131,14 +130,11 @@ disp(mes);
 
 save(strcat(mainfolder,'/traim.mat'));
 
-% CC = reshape(data.C,1,184);
+% CC = reshape(data.C,1,(NUM_DC+NUM_Center+NUM_Finger_regions)*8);
 % CC = CC';
 % for a = 1:5
 %     CC(:,a) = CC(:,1);
-%     CC(185,a) = a;
+%     CC((NUM_DC+NUM_Center+NUM_Finger_regions)*8+1,a) = a;
 % end
 CC=data.C
 dlmwrite(strcat(mainfolder,'/D_trap/Cfiles/D_trap_mid.txt'), CC, 'delimiter', ' ')
-
-
-
