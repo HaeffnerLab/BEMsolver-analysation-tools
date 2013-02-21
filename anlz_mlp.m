@@ -27,11 +27,11 @@ mainfolder='/home/soenke/Documents/Mathlab/trap_simulations';
 %% Inputs
 %Files & Paths
 
-importDate = 'D_wire-50_99-129_WR64height_field_01-25-2013-13h42'; % Imported .MAT file path
+importDate = 'A_wire-50x250z_89-139_WR65_field_02-21-2013-11h33'; % Imported .MAT file path
 dataNames = importDate(1:length(importDate)-17); 
-zMin = 2525; % FREQ
-zMax = 2555; % FREQ
-zStep = 30; % Length covered by each .MAT files
+zMin = 1245; % FREQ
+zMax = 1295; % FREQ
+zStep = 50; % Length covered by each .MAT files
 
 
 datapath = strcat(mainfolder,sprintf('/results/%s/',importDate));
@@ -39,12 +39,10 @@ datapath = strcat(mainfolder,sprintf('/results/%s/',importDate));
 outpath = strcat(mainfolder,'/post-processed-simulation-data/');  %Location to save the output of this program
 %newfilename = '05-17-2011-13h08';   %Folder to save the output of the program
 % Trap discription 
-NUM_DC = 24;            % Number of DC electrodes
-NUM_Center = 0;         % Number of Center electrodes
 NUM_Finger_regions = 0; % This should be 0 or equal to NUM_Center
 
 % To chose between all mltipoles (1) and only U2 (0) 
-allmultipoles = 1;
+allmultipoles = 0;
 
 % To add any kind of constraints on the way the electrodes are connected 0
 % for no constrain, for others look in regenthedata
@@ -60,7 +58,7 @@ allmultipoles = 1;
 
 truncVoltages = 0;
 
-pos = 2540;      % 5th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
+pos = 1270;      % 5th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
 % pos = 1065;      % 4th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
 % pos = 760;      % 3rd           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
 % pos = 2085;      % 8th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
@@ -81,8 +79,8 @@ RF_offset = 0;
 position = pos/1000;
 data.pre = 0;
 
-data = getdata(datapath,position,dataNames,1,zMin,zMax,zStep,NUM_DC,NUM_Center);
-data = regenthedata(data,0,0,position,9,NUM_DC,NUM_Center,truncVoltages,RF_offset);
+data = getdata(datapath,position,dataNames,1,zMin,zMax,zStep);
+data = regenthedata(data,0,0,position,9,truncVoltages,RF_offset);
 data.allmultipoles = allmultipoles;
 data = trapknobs(data,position,0,0,1);
 
@@ -100,11 +98,11 @@ Ex = 0;
 Ey = 0;
 Ez = 0;
 
-params.rfamplitude = 200; 
+params.rfamplitude = 50; 
 params.frequency = 52e6;
-U1 = -.22;
-U2 = 5.0; 
-U3 = .22;  
+U1 = 0;
+U2 = 2; 
+U3 = 0;  
 U4 = 0; 
 U5 = 0;
 params.E = [Ex Ey Ez];
@@ -115,11 +113,11 @@ else
     el = setdc(data,params.frequency,-Ex,-Ey,-Ez,U1,U2,U3,U4,U5,ax,az,phi,ind,reg);
 end
 params.VELDC = el;
-%params.VELDC = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
+%params.VELDC = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0NUM_DC,NUM_Center,,0,0,0,0,0,1];
 
 outpath2 = sprintf('%s/',outpath);
 newfilename2 = 0;
-params = ppt2(params,data,'N',NUM_DC,NUM_Center,2,0,0,2,outpath2,newfilename2,pos,truncVoltages,RF_offset);
+params = ppt2(params,data,'N',2,0,0,2,outpath2,newfilename2,pos,truncVoltages,RF_offset);
 
 mes = sprintf('The secular frequencies are: (%G, %G, %G) Hz.\n',params.f(1),params.f(2),params.f(3));
 disp(mes);
@@ -130,11 +128,11 @@ disp(mes);
 
 save(strcat(mainfolder,'/traim.mat'));
 
-% CC = reshape(data.C,1,(NUM_DC+NUM_Center+NUM_Finger_regions)*8);
-% CC = CC';
-% for a = 1:5
-%     CC(:,a) = CC(:,1);
-%     CC((NUM_DC+NUM_Center+NUM_Finger_regions)*8+1,a) = a;
-% end
-CC=data.C
-dlmwrite(strcat(mainfolder,'/D_trap/Cfiles/D_trap_mid.txt'), CC, 'delimiter', ' ')
+CC = reshape(data.C,1,(data.NUM_DC+data.NUM_CENTER+NUM_Finger_regions)*8);
+CC = CC';
+for a = 1:25
+    CC(:,a) = CC(:,1);
+    CC((data.NUM_DC+data.NUM_CENTER+NUM_Finger_regions)*8+1,a) = a;
+end
+%CC=data.C
+dlmwrite(strcat(mainfolder,'/D_trap/Cfiles/D_trap_mid_wirectr_onlyU2.txt'), CC, 'delimiter', ' ')

@@ -1,4 +1,4 @@
-function  out = ppt2_Dtrap(params,data,func,NUM_DC,NUM_Center,dcplot,rfplot,plotPseudopotential,plotTrappotential,outpath,newfilename,posIndex,truncVoltages,RF_offset)
+function  out = ppt2_Dtrap(params,data,func,dcplot,rfplot,plotPseudopotential,plotTrappotential,outpath,newfilename,posIndex,truncVoltages,RF_offset)
 % out ppt2(params,data,func)
 % post processing tool
 % params 
@@ -60,7 +60,7 @@ plotpot(Vrf,Irf,Jrf,Krf,data.grid,rfplot,'RF potential','V_{rf} (Volt)',outpath,
 
 if ~isempty(params.E),      % check if the initial guess for E is ok
     EE = params.E;
-    Vdc = CalcVDC(data,scale*VELDC,EE(1),EE(2),EE(3),NUM_DC,NUM_Center,x,y,z,truncVoltages,RF_offset); 
+    Vdc = CalcVDC(data,scale*VELDC,EE(1),EE(2),EE(3),data.NUM_DC,data.NUM_CENTER,x,y,z,truncVoltages,RF_offset); 
     % DC parameters                                                            
     [Idum Jdum Kdum] =  findsaddle(Vdc,X,Y,Z,3,Zval);
 %plotpot(Vdc,Idum,Jdum,Kdum,grid,dcplot,'DC potential (stray field included)','V_{dc} (Volt)',outpath,newfilename);
@@ -71,7 +71,7 @@ if ~isempty(params.E),      % check if the initial guess for E is ok
 end
 
 % need to restore this for d_e to run properly
-Vdc = CalcVDC(data,scale*VELDC,0,0,0,NUM_DC,NUM_Center,x,y,z,truncVoltages,RF_offset);
+Vdc = CalcVDC(data,scale*VELDC,0,0,0,data.NUM_DC,data.NUM_CENTER,x,y,z,truncVoltages,RF_offset);
 
 if strcmp(func,'E'),                                                       
     % this option means find stray field
@@ -83,7 +83,7 @@ if strcmp(func,'E'),
             E0 = sscanf(st,'%f',inf)'/1e3;
             dist0 = d_e(E0);
             %Vdum = VDC1(scale*(W-Hor),scale*(N+Hor),scale*(Cnt+Ver),E0(1),E0(2),E0(3));
-            Vdum = CalcVDC(data,scale*VELDC,E0(1),E0(2),E0(3),NUM_DC,NUM_Center,x,y,z,truncVoltages,RF_offset);
+            Vdum = CalcVDC(data,scale*VELDC,E0(1),E0(2),E0(3),data.NUM_DC,data.NUM_CENTER,x,y,z,truncVoltages,RF_offset);
             [Idum Jdum Kdum] =  findsaddle(Vdum,X,Y,Z,3,Zval);
             warn('DC',Vdum,Idum,Jdum,Kdum);
             plotpot(Vdum,Irf,Jrf,Krf,data.grid,2,'Initial guess for DC potential','V_{dc} (Volt)',outpath,newfilename);
@@ -94,7 +94,7 @@ if strcmp(func,'E'),
         E0 = params.E;
         dist0 = d_e(E0);
         %Vdum = VDC1(scale*(W-Hor),scale*(N+Hor),scale*(Cnt+Ver),E0(1),E0(2),E0(3));
-        Vdum = CalcVDC(data,scale*VELDC,E0(1),E0(2),E0(3),NUM_DC,NUM_Center,x,y,z,truncVoltages,RF_offset);
+        Vdum = CalcVDC(data,scale*VELDC,E0(1),E0(2),E0(3),data.NUM_DC,data.NUM_CENTER,x,y,z,truncVoltages,RF_offset);
         [Idum Jdum Kdum] =  findsaddle(Vdum,X,Y,Z,3,Zval);
         warn('DC',Vdum,Idum,Jdum,Kdum);
         plotpot(Vdum,Idum,Jdum,Kdum,data.grid,0,'Initial guess for DC potential','V_{dc} (Volt)',outpath,newfilename);
@@ -127,7 +127,7 @@ elseif strcmp(func,'C'),
         guess = sscanf(st,'%f',inf);
         VC0 = guess(1); HC0 = guess(2);
         %Vdum = VDC1(scale*(W-HC0),scale*(N+HC0),scale*(Cnt+VC0),E(1),E(2),E(3));
-        Vdum = CalcVDC(data,scale*VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,truncVoltages,RF_offset);
+        Vdum = CalcVDC(data,scale*VELDC,E(1),E(2),E(3),data.NUM_DC,data.NUM_CENTER,x,y,z,truncVoltages,RF_offset);
         [Idum Jdum Kdum] =  findsaddle(Vdum,X,Y,Z,3,Zval);
         warn('DC',Vdum,Idum,Jdum,Kdum);
         plotpot(Vdum,Idum,Jdum,Kdum,grid,2,'Initial guess for DC potential','V_{dc} (Volt)',outpath,newfilename);
@@ -161,7 +161,7 @@ else
 end
 
 
-Vdc = CalcVDC(data,scale*VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,truncVoltages,RF_offset);
+Vdc = CalcVDC(data,scale*VELDC,E(1),E(2),E(3),data.NUM_DC,data.NUM_CENTER,x,y,z,truncVoltages,RF_offset);
 
 
 [XRF YRF ZRF] = exactsaddle(data.EL_RF,X,Y,Z,2,Zval);                                  % find secular frequencies etc.
@@ -275,7 +275,7 @@ out.superU = superU;
         
         % find dc potential
         %Vl = VDC1(w,n,cnt,ex,ey,ez);
-        Vl = CalcVDC(data,scale*VELDC,e1,e2,e3,NUM_DC,NUM_Center,x,y,z,truncVoltages,RF_offset);
+        Vl = CalcVDC(data,scale*VELDC,e1,e2,e3,data.NUM_DC,data.NUM_CENTER,x,y,z,truncVoltages,RF_offset);
         
         [Xdc Ydc Zdc] = exactsaddle(Vl,X,Y,Z,3,Zval);
         

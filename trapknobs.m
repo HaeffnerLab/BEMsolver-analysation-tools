@@ -57,13 +57,11 @@ for ii=1:8
         end
 
         %imagesc21(P,'');
-
         C(ii,:) = P';
         
 end
 
 K = null(Mt);
-
 
 if reg
     for ii = 1:8

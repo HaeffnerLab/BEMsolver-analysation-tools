@@ -1,4 +1,4 @@
-function datout = regenthedata_Dtrap(data,Xcorrection,Ycorrection,position,L,NUM_DC,NUM_Center,truncVoltages,RF_offset)
+function datout = regenthedata_Dtrap(data,Xcorrection,Ycorrection,position,L,truncVoltages,RF_offset)
 % function datout = regenthedata(data,Xcorrection,Ycorrection,position,L)
 % Regenerate the potential data for all electrodes using multipole
 % expansion to order L. Also return a field datout.M, which contains the
@@ -25,7 +25,7 @@ datout = data;
 X = normalize(data.X); Y = normalize(data.Y); Z = normalize(data.Z);
 [y x z] = meshgrid(Y,X,Z);
 
-ord = zeros(1,NUM_DC+NUM_Center);
+ord = zeros(1,data.NUM_DC+data.NUM_CENTER);
 ord(:)=L;
 
 Irf = 15; Jrf = 15; Krf = 15;
@@ -63,11 +63,11 @@ c = [ 1  0  0  0  0  0  0  0  0; ...
 
 
 if (truncVoltages == 0)       %% For a regular un-constrained trap
-      for el = 1:(NUM_DC+NUM_Center)
-        VELDC = zeros(1,NUM_DC+NUM_Center);
+      for el = 1:(data.NUM_DC+data.NUM_CENTER)
+        VELDC = zeros(1,data.NUM_DC+data.NUM_CENTER);
         VELDC(el) = 1;
 
-        Vdc = CalcVDC(data,VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,0,RF_offset);
+        Vdc = CalcVDC(data,VELDC,E(1),E(2),E(3),data.NUM_DC,data.NUM_CENTER,x,y,z,0,RF_offset);
         %plotpot(Vdc,Irf,Jrf,Krf,data.grid,2,sprintf('El. %i DC Potential',el),'V (Volt)');
 %         position
 %         el
@@ -81,7 +81,7 @@ elseif (truncVoltages == 1) %% If the electrodes are connected in pairs.
     %here we have to define the electrodes that are  INCLUDED in the
     %calculation, i.e. here we take into accoung 1:8, 21:28 and 41:42.
     for el = [2 4 6 8 10 12 14 16 22 24 26 28 30 32 34 36 41:42]
-        VELDC = zeros(1,NUM_DC+NUM_Center);
+        VELDC = zeros(1,data.NUM_DC+data.NUM_CENTER);
         VELDC(el) = 1;
         % this connects electrodes in pairs of two (except center
         % electrodes 41,42)
@@ -90,7 +90,7 @@ elseif (truncVoltages == 1) %% If the electrodes are connected in pairs.
             VELDC(el+1) = 1;
         end;
 
-        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,0,RF_offset);
+        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),data.NUM_DC,data.NUM_CENTER,x,y,z,0,RF_offset);
         %plotpot(Vdc,Irf,Jrf,Krf,data.grid,2,sprintf('El. %i DC Potential',el),'V (Volt)');
 %         position
 %         el
@@ -128,10 +128,10 @@ elseif (truncVoltages == 1) %% If the electrodes are connected in pairs.
 elseif(truncVoltages == 2)
    %% For Squip first trail
      for el = [1:8 12:19 23]    % Trapping with fewer electrodes 
-        VELDC = zeros(1,NUM_DC+NUM_Center);
+        VELDC = zeros(1,data.NUM_DC+data.NUM_CENTER);
         VELDC(el) = 1;
 
-        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,0,RF_offset);
+        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),data.NUM_DC,data.NUM_CENTER,x,y,z,0,RF_offset);
         %plotpot(Vdc,Irf,Jrf,Krf,data.grid,2,sprintf('El. %i DC Potential',el),'V (Volt)');
         position
         el
@@ -165,10 +165,10 @@ elseif(truncVoltages == 2)
 %     M1 = M12;
 elseif (truncVoltages == 3)
      for el = [2:9 13:20 23]    % Trapping with fewer electrodes 
-        VELDC = zeros(1,NUM_DC+NUM_Center);
+        VELDC = zeros(1,data.NUM_DC+data.NUM_CENTER);
         VELDC(el) = 1;
 
-        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,0,RF_offset);
+        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),data.NUM_DC,data.NUM_CENTER,x,y,z,0,RF_offset);
         %plotpot(Vdc,Irf,Jrf,Krf,data.grid,2,sprintf('El. %i DC Potential',el),'V (Volt)');
         position
         el
@@ -203,10 +203,10 @@ elseif (truncVoltages == 3)
  
 elseif (truncVoltages == 35)
      for el = [2:9 13:20 23]    % Trapping with fewer electrodes 
-        VELDC = zeros(1,NUM_DC+NUM_Center);
+        VELDC = zeros(1,data.NUM_DC+data.NUM_CENTER);
         VELDC(el) = 1;
 
-        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,0,RF_offset);
+        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),data.NUM_DC,data.NUM_CENTER,x,y,z,0,RF_offset);
         %plotpot(Vdc,Irf,Jrf,Krf,data.grid,2,sprintf('El. %i DC Potential',el),'V (Volt)');
         position
         el
@@ -218,10 +218,10 @@ elseif (truncVoltages == 35)
 elseif (truncVoltages == 5)
 %% Trapping at 3rd electrode with 13 electrodes   
     for el = [1:5 12:16 23]    % Trapping with fewer electrodes 
-        VELDC = zeros(1,NUM_DC+NUM_Center);
+        VELDC = zeros(1,data.NUM_DC+data.NUM_CENTER);
         VELDC(el) = 1;
 
-        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,0,RF_offset);
+        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),data.NUM_DC,data.NUM_CENTER,x,y,z,0,RF_offset);
         %plotpot(Vdc,Irf,Jrf,Krf,data.grid,2,sprintf('El. %i DC Potential',el),'V (Volt)');
         position
         el
@@ -258,7 +258,7 @@ elseif (truncVoltages == 5)
 elseif (truncVoltages == 6)
         %% For sqip with some of the electrodes paired    
        for el = [1 3 4 5 6 7 8 9 12 14 15 16 17 18 19 20 23]
-        VELDC = zeros(1,NUM_DC+NUM_Center);
+        VELDC = zeros(1,data.NUM_DC+data.NUM_CENTER);
         VELDC(el) = 1;
         % this connects some of the electrodes pairwise
         if (el==1 || el==12) 
@@ -274,7 +274,7 @@ elseif (truncVoltages == 6)
         disp('--------------')
         disp(VELDC);
 
-        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,0,RF_offset);
+        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),data.NUM_DC,data.NUM_CENTER,x,y,z,0,RF_offset);
         %plotpot(Vdc,Irf,Jrf,Krf,data.grid,2,sprintf('El. %i DC
         %Potential',el),'V (Volt)');
 %         position
@@ -312,7 +312,7 @@ elseif (truncVoltages == 6)
 elseif (truncVoltages == 7)
         %% For sqip with some of the electrodes paired    
        for el = [1 3 4 5 6 7 8 9 12 14 15 16 17 18 19 20]
-        VELDC = zeros(1,NUM_DC+NUM_Center);
+        VELDC = zeros(1,data.NUM_DC+data.NUM_CENTER);
         VELDC(el) = 1;
         % this connects some of the electrodes pairwise
         if (el==1 || el==12) 
@@ -328,7 +328,7 @@ elseif (truncVoltages == 7)
         disp('--------------')
         disp(VELDC);
 
-        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,0,RF_offset);
+        Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),data.NUM_DC,data.NUM_CENTER,x,y,z,0,RF_offset);
         %plotpot(Vdc,Irf,Jrf,Krf,data.grid,2,sprintf('El. %i DC
         %Potential',el),'V (Volt)');
 %         position
@@ -365,10 +365,10 @@ elseif (truncVoltages == 7)
     %% For the D trap MIT trapping     
 elseif (truncVoltages == 4)
      for el = [6 7 8 9 17 18 19 20 23]
-         VELDC = zeros(1,NUM_DC+NUM_Center);
+         VELDC = zeros(1,data.NUM_DC+data.NUM_CENTER);
          VELDC(el) = 1;
          
-         Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),NUM_DC,NUM_Center,x,y,z,0,RF_offset);
+         Vdc = CalcVDC_Dtrap(data,VELDC,E(1),E(2),E(3),data.NUM_DC,data.NUM_CENTER,x,y,z,0,RF_offset);
         Q = spherharmxp(Vdc,Xrf+Xcorrection,Yrf+Ycorrection,Zrf,ord(el),X,Y,Z);                        % this is a column [Q1 Q2 ...]'
         %eval(sprintf('datout.%s = spherharmcmp(Q,Xrf+Xcorrection,Yrf+Ycorrection,Zrf,ord(el),X,Y,Z);',str));
         M1(:,el) = Q(1:(L+1)^2);

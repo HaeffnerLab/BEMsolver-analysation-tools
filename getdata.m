@@ -1,4 +1,4 @@
-function data = getthedata_Dtrap(path,position,dataNames,plotOpt,zMin,zMax,zStep,NUM_DC,NUM_Center)
+function data = getthedata_Dtrap(path,position,dataNames,plotOpt,zMin,zMax,zStep)
 % generate the data structure for trap operation around axial position
 % centered at "position". the consecutive data srtuctures have overlapping
 % first and last points, i.e. ptI.Z(31) = ptI+1.Z(1)
@@ -126,11 +126,11 @@ for i=K3:K4
     
     data.EL_RF(:,:,i-K3+max(K2-K1,-1)+2) = data2.EL_RF(:,:,i);
     
-    for iii=1:(NUM_DC)
+    for iii=1:(data.NUM_DC)
         data.(['EL_DC' num2str(iii)])(:,:,i-K3+max(K2-K1,-1)+2) = data2.(['EL_DC' num2str(iii)])(:,:,i);
     end
      
-    for iii=1:(NUM_Center)
+    for iii=1:(data.NUM_Center)
         data.(['EL_CNT' num2str(iii)])(:,:,i-K3+max(K2-K1,-1)+2) = data2.(['EL_CNT' num2str(iii)])(:,:,i);
     end  
     
