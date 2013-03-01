@@ -25,8 +25,6 @@ function  out = ppt2_Dtrap(params,data,func,dcplot,rfplot,plotPseudopotential,pl
 
 % rfplot, dcplot:   sets plotoptions...
 
-
-
 e=1.60217646e-19;                                                                       % elementary charge unit in SI
 mp=1.67262158e-27;                                                                      % proton mass in SI units
 Mn = 40;                                                                                            % Mass number of the ion
@@ -57,6 +55,8 @@ plotpot(Vrf,Irf,Jrf,Krf,data.grid,rfplot,'RF potential','V_{rf} (Volt)',outpath,
 %[Idc Jdc Kdc] =  findsaddle(Vdc,X,Y,Z,3,Zval);
 %warn('DC',Vdc,Idc,Jdc,Kdc);
 %plotpot(Vdc,Idc,Jdc,Kdc,grid,0,'DC potential (no stray field included)','V_{dc} (Volt)');
+
+out.johnson_at_1Ohm_1MHz = johnson_noise(Irf,Jrf,Krf)
 
 if ~isempty(params.E),      % check if the initial guess for E is ok
     EE = params.E;
@@ -312,10 +312,7 @@ out.superU = superU;
 
         
       % plotpot(data.EL_RF,Irf,Jrf,Krf,data.grid,plotTrappotential,'RF potential','(eV)',outpath,'rf');
-
-        
-        
-        
+      
         % trap frequencies and tilt in radial directions
         Uxy = U(Irf-3:Irf+3,Jrf-3:Jrf+3,Krf); 
         MU = max(max(Uxy)); dL = (x(Irf+3,Jrf,Krf)-x(Irf,Jrf,Krf));
@@ -382,5 +379,43 @@ out.superU = superU;
                 f = true;
         end  
     end
+      
+ function f= johnson_noise(I,J,K)
+        lightspeed=299792458;
+        e=1.60217646e-19; 
+        me=9.10938188e-31; 
+        mp=1.67262158e-27;
+        kb=1.3806503e-23; 
+        e0=8.8542e-12; miu0=4*pi*1e-7;
+        mu0=4*pi*1e-7;
+        h=6.626068e-34; 
+        hbar=h/(2*pi);
+        a0 = 5.2917720859e-11;
+        T=300;
 
-end        
+    % estimate the heating rate at 1 MHz caused by 1 Ohm on the electrodes   
+        ex = 0; ey = 0; ez = 0;
+        for iii = 1:(data.NUM_DC)
+            VV = data.(['EL_DC' num2str(iii)]);
+            ex(iii) = (VV(I+1,J,K)-VV(I,J,K))/((data.X(2)-data.X(1))*r0*1e-3);
+            ey(iii) = (VV(I,J+1,K)-VV(I,J,K))/((data.Y(2)-data.Y(1))*r0*1e-3);
+            ez(iii) = (VV(I,J,K+1)-VV(I,J,K))/((data.Z(2)-data.Z(1))*r0*1e-3);
+        end
+   
+        for iii=1:(data.NUM_CENTER)
+            VV = data.(['EL_CNT' num2str(iii)]);
+            ex(iii) = (VV(I+1,J,K)-VV(I,J,K))/((data.X(2)-data.X(1))*r0*1e-3);
+            ey(iii) = (VV(I,J+1,K)-VV(I,J,K))/((data.Y(2)-data.Y(1))*r0*1e-3);
+            ez(iii) = (VV(I,J,K+1)-VV(I,J,K))/((data.Z(2)-data.Z(1))*r0*1e-3);
+        end
+       
+        Sv = 4*kb*T*1; % johnson noise from 1 Ohm
+        Sex = sum(ex.^2)*Sv;
+        Sey = sum(ey.^2)*Sv;
+        Sez = sum(ez.^2)*Sv;
+        dEdt = (e^2/(4*Mn*mp))*[Sex,Sey,Sez];
+        dndt = dEdt/(hbar*2*pi*1e6);
+        f = dndt;
+ end
+
+end 

@@ -17,7 +17,7 @@ set = 1;
 
 if (set == 1)
     datapathin = '/home/soenke/Documents/Mathlab/trap_simulations/results/'; % specify name of txt files (the number will be added at the end!)
-    dataNames = 'A_wire-50x250z_89-139_WR65_field';
+    dataNames = 'D_wire-50_99-129_WR64height_field';
 elseif(set == 2)
      datapathin = '/home/soenke/Mathlab/trap_simulations/';
      dataNames = 'Eu_Trap-pt1_pos_E7E8_cor2';

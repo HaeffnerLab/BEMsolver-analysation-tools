@@ -27,11 +27,11 @@ mainfolder='/home/soenke/Documents/Mathlab/trap_simulations';
 %% Inputs
 %Files & Paths
 
-importDate = 'A_wire-50x250z_89-139_WR65_field_02-21-2013-11h33'; % Imported .MAT file path
+importDate = 'D_wire-50_99-129_WR64height_field_02-28-2013-14h16'; % Imported .MAT file path
 dataNames = importDate(1:length(importDate)-17); 
-zMin = 1245; % FREQ
-zMax = 1295; % FREQ
-zStep = 50; % Length covered by each .MAT files
+zMin = 2525; % FREQ
+zMax = 2555; % FREQ
+zStep = 30; % Length covered by each .MAT files
 
 
 datapath = strcat(mainfolder,sprintf('/results/%s/',importDate));
@@ -58,7 +58,7 @@ allmultipoles = 0;
 
 truncVoltages = 0;
 
-pos = 1270;      % 5th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
+pos = 2540;      % 5th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
 % pos = 1065;      % 4th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
 % pos = 760;      % 3rd           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
 % pos = 2085;      % 8th           %Position of the Ion along the Z axis (microns)  2538 for D trap 5th, 1270 for A trap 5th
@@ -135,4 +135,4 @@ for a = 1:25
     CC((data.NUM_DC+data.NUM_CENTER+NUM_Finger_regions)*8+1,a) = a;
 end
 %CC=data.C
-dlmwrite(strcat(mainfolder,'/D_trap/Cfiles/D_trap_mid_wirectr_onlyU2.txt'), CC, 'delimiter', ' ')
+dlmwrite(strcat(mainfolder,'/D_trap/Cfiles/A_trap_mid_wirectr_onlyU2.txt'), CC, 'delimiter', ' ')
